@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختر جارك | فيصل بن سعيدان العقارية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ===== FBS brand palette ===== */
+    --deep-blue:#0e3a5c;    /* Deep Blue */
+    --sky-blue:#5e92b8;     /* Sky Blue  */
+    --steel-gray:#9bb0bc;   /* Steel Gray */
+    --light-blue:#a7d4f0;   /* Light Blue */
+    --mist-gray:#cfdae2;    /* Mist Gray */
+    --air-blue:#deeaf1;     /* Air Blue */
+    --white:#ffffff;        /* Pure White */
+
+    --brand:#0e3a5c;
+    --brand-dark:#0a2c47;
+    --gold:#5e92b8;         /* sky-blue accent */
+    --gold-light:#a7d4f0;   /* light-blue tint */
+    --bg:#eef4f8;
+    --card:#ffffff;
+    --text:#15263a;
+    --muted:#5f7585;
+    --border:#cfdae2;
+    --error:#c0392b;
+    --ok:#0e3a5c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Tajawal',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.7;
+    padding:0 0 60px;
+  }
+  .hero{
+    background:var(--steel-gray);
+    color:var(--deep-blue);
+    padding:22px 20px 52px;
+    text-align:center;
+    position:relative;
+  }
+  .logo-card{
+    background:#fff;border-radius:12px;
+    padding:11px 22px;display:inline-block;
+    margin:0 auto 14px;box-shadow:0 5px 16px rgba(0,0,0,.15);
+  }
+  .logo-card svg{display:block;height:52px;width:auto;}
+  .logo-card .logo-img{display:block;height:54px;width:auto;}
+  .slogan{font-size:15px;font-weight:600;color:#fff;opacity:.95;margin-bottom:2px;}
+  .hero h1{font-size:26px;font-weight:800;margin-bottom:8px;color:#fff;}
+  .hero p{font-size:14.5px;color:#fff;opacity:.95;max-width:540px;margin:0 auto;}
+  .wrap{max-width:640px;margin:-34px auto 0;padding:0 16px;}
+  .card{
+    background:var(--card);
+    border-radius:16px;
+    box-shadow:0 10px 34px rgba(14,58,92,.10);
+    padding:26px 22px;
+    margin-bottom:20px;
+  }
+  .section-title{
+    font-size:18px;font-weight:800;color:var(--brand);
+    display:flex;align-items:center;gap:8px;margin-bottom:4px;
+  }
+  .section-title .num{
+    background:var(--gold);color:#fff;width:26px;height:26px;border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;font-size:14px;
+  }
+  .section-sub{color:var(--muted);font-size:14px;margin-bottom:16px;}
+  label{display:block;font-weight:500;margin-bottom:6px;font-size:15px;}
+  label .req{color:var(--error);}
+  input{
+    width:100%;padding:12px 14px;font-family:inherit;font-size:15px;
+    border:1.5px solid var(--border);border-radius:10px;background:#fbfdfc;
+    transition:border-color .15s,box-shadow .15s;text-align:right;
+  }
+  input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(14,58,92,.14);background:#fff;}
+  input::placeholder{color:#aab5b1;}
+  .field{margin-bottom:15px;}
+  .row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+  .nbr{
+    border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;
+    background:#fafcfb;
+  }
+  .nbr-head{font-weight:700;color:var(--brand-dark);margin-bottom:10px;font-size:15px;}
+  .nbr-head .dot{
+    display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--brand);
+    color:#fff;align-items:center;justify-content:center;font-size:13px;margin-left:6px;
+  }
+  .err{color:var(--error);font-size:13px;margin-top:4px;display:none;}
+  input.invalid{border-color:var(--error);background:#fdf3f2;}
+  .add-more{
+    width:100%;padding:12px;margin-top:4px;font-family:inherit;font-size:15px;font-weight:700;
+    color:var(--brand);background:var(--air-blue);border:1.5px dashed var(--sky-blue);
+    border-radius:10px;cursor:pointer;transition:background .15s;
+  }
+  .add-more:hover{background:var(--light-blue);}
+  .nbr.hidden{display:none;}
+  .consent{
+    display:flex;align-items:flex-start;gap:10px;cursor:pointer;
+    background:var(--air-blue);border:1.5px solid var(--light-blue);
+    border-radius:10px;padding:13px 14px;margin-bottom:6px;font-size:14.5px;line-height:1.6;
+  }
+  .consent input{width:20px;height:20px;flex-shrink:0;margin-top:2px;accent-color:var(--brand);cursor:pointer;}
+  .consent.invalid{border-color:var(--error);background:#fdf3f2;}
+  #consentErr{margin:0 0 14px 0;}
+  button{
+    width:100%;padding:16px;font-family:inherit;font-size:18px;font-weight:800;
+    color:#fff;background:var(--brand);border:none;border-radius:12px;cursor:pointer;
+    transition:background .15s,transform .05s;
+  }
+  button:hover{background:var(--brand-dark);}
+  button:active{transform:scale(.99);}
+  button:disabled{opacity:.6;cursor:not-allowed;}
+  .hint{font-size:13px;color:var(--muted);text-align:center;margin-top:12px;}
+  .note{
+    background:var(--air-blue);border:1px solid var(--light-blue);border-radius:10px;
+    padding:12px 14px;font-size:14px;color:#0e3a5c;margin-bottom:18px;
+  }
+  /* success screen */
+  .success{display:none;text-align:center;padding:40px 20px;}
+  .success .check{
+    width:84px;height:84px;border-radius:50%;background:var(--ok);color:#fff;
+    font-size:46px;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;
+  }
+  .success h2{color:var(--brand);font-size:24px;margin-bottom:10px;}
+  .success p{color:var(--muted);font-size:16px;max-width:420px;margin:0 auto;}
+  .footer{text-align:center;color:var(--muted);font-size:13px;margin-top:24px;}
+  @media(max-width:520px){
+    .row{grid-template-columns:1fr;}
+    .hero h1{font-size:24px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <!-- شعار FBS الرسمي -->
+  <div class="logo-card">
+    <img src="fbs-logo.png" alt="فيصل بن سعيدان FBS" class="logo-img">
+  </div>
+  <div class="slogan">لأن الجار قبل الدار...</div>
+  <h1>اختر جارك بنفسك</h1>
+  <p>رشّح من تثق بهم من معارفك ليكونوا جيرانك المستقبليين، ولك منا كل الشكر والتقدير.</p>
+</div>
+
+<div class="wrap">
+  <form id="campaignForm" novalidate>
+
+    <div class="card">
+      <div class="note">🎁 رشّح حتى ٥ من معارفك، وكن سبباً في اختيار جيرانك المستقبليين.</div>
+
+      <div class="section-title"><span class="num">1</span> بياناتك</div>
+      <div class="section-sub">من فضلك أدخل اسمك ورقم جوالك لنتمكن من التواصل معك.</div>
+
+      <div class="field">
+        <label>الاسم الكامل <span class="req">*</span></label>
+        <input type="text" id="refName" name="refName" placeholder="مثال: عبدالله محمد">
+        <div class="err">يرجى إدخال الاسم.</div>
+      </div>
+      <div class="field">
+        <label>رقم الجوال <span class="req">*</span></label>
+        <input type="tel" id="refPhone" name="refPhone" inputmode="numeric" placeholder="05XXXXXXXX">
+        <div class="err">يرجى إدخال رقم جوال صحيح (10 أرقام يبدأ بـ 05).</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title"><span class="num">2</span> ترشيح الجيران</div>
+      <div class="section-sub">رشّح حتى ٥ أشخاص. يكفي ترشيح شخص واحد على الأقل.</div>
+
+      <div id="neighborsWrap"></div>
+      <button type="button" id="addMoreBtn" class="add-more">+ مرشحون إضافيون</button>
+    </div>
+
+    <div class="card">
+      <label class="consent" id="consentBox">
+        <input type="checkbox" id="consent" name="consent">
+        <span>أقرّ بأن الأشخاص المرشَّحين على علم بمشاركة بياناتهم وبأنه سيتم التواصل معهم بخصوص حملة «اختر جارك».</span>
+      </label>
+      <div class="err" id="consentErr">يرجى الموافقة على الإقرار للمتابعة.</div>
+
+      <button type="submit" id="submitBtn">إرسال الترشيحات</button>
+      <div class="hint">بياناتك تُستخدم لأغراض هذه الحملة فقط ولن تُشارك مع أي جهة خارجية.</div>
+    </div>
+  </form>
+
+  <div class="success card" id="successScreen">
+    <div class="check">✓</div>
+    <h2>تم استلام ترشيحاتك بنجاح!</h2>
+    <p>شكراً جزيلاً لمشاركتك في حملة «اختر جارك». سيتواصل معك فريق فيصل بن سعيدان العقارية قريباً.</p>
+  </div>
+
+  <div class="footer">© فيصل بن سعيدان العقارية — حملة «اختر جارك»</div>
+</div>
+
+<script>
+  /* ====== 1) ضع رابط تطبيق Google Apps Script هنا بعد إنشائه (راجع دليل الإعداد) ====== */
+  const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbw3WvjrsDV0wb4y2d9pvoRmCaGJY1ghTwTxUKIeKkML_6e9wSZYZN8pAbrB_lhSUHaX/exec";
+
+  /* بناء حقول الجيران الخمسة — تظهر أول مرشّحَين فقط، والبقية عبر الزر */
+  const VISIBLE_AT_START = 2;
+  const wrap = document.getElementById('neighborsWrap');
+  for (let i = 1; i <= 5; i++){
+    wrap.insertAdjacentHTML('beforeend', `
+      <div class="nbr${i > VISIBLE_AT_START ? ' hidden' : ''}" data-idx="${i}">
+        <div class="nbr-head"><span class="dot">${toAr(i)}</span> الجار المرشّح رقم ${toAr(i)}</div>
+        <div class="row">
+          <div class="field" style="margin-bottom:0">
+            <label>الاسم</label>
+            <input type="text" name="n${i}_name" placeholder="الاسم">
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>رقم الجوال</label>
+            <input type="tel" name="n${i}_phone" inputmode="numeric" placeholder="05XXXXXXXX">
+            <div class="err">رقم غير صحيح.</div>
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>صلة القرابة</label>
+            <input type="text" name="n${i}_area" placeholder="مثال: قريب، صديق، زميل">
+          </div>
+        </div>
+      </div>
+    `);
+  }
+
+  /* زر "مرشحون إضافيون" — يُظهر صفاً جديداً عند كل ضغطة */
+  const addMoreBtn = document.getElementById('addMoreBtn');
+  addMoreBtn.addEventListener('click', function(){
+    const next = wrap.querySelector('.nbr.hidden');
+    if(next){
+      next.classList.remove('hidden');
+      next.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+    if(!wrap.querySelector('.nbr.hidden')) addMoreBtn.style.display = 'none';
+  });
+
+  function toAr(n){ return String(n).replace(/[0-9]/g, d => "٠١٢٣٤٥٦٧٨٩"[d]); }
+  function normDigits(s){ return s.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[^0-9]/g,''); }
+  function validPhone(s){ const d = normDigits(s); return /^05\d{8}$/.test(d); }
+  function showErr(input, on){
+    input.classList.toggle('invalid', on);
+    const e = input.parentElement.querySelector('.err');
+    if(e) e.style.display = on ? 'block' : 'none';
+  }
+
+  const form = document.getElementById('campaignForm');
+  const btn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    let ok = true;
+
+    const name = document.getElementById('refName');
+    const phone = document.getElementById('refPhone');
+    showErr(name, !name.value.trim());      if(!name.value.trim()) ok = false;
+    showErr(phone, !validPhone(phone.value)); if(!validPhone(phone.value)) ok = false;
+
+    // at least one neighbor name
+    let neighborCount = 0;
+    for(let i=1;i<=5;i++){
+      const nn = form[`n${i}_name`].value.trim();
+      const np = form[`n${i}_phone`];
+      if(np.value.trim()){
+        const bad = !validPhone(np.value);
+        showErr(np, bad); if(bad) ok = false;
+      } else { showErr(np, false); }
+      if(nn) neighborCount++;
+    }
+    if(neighborCount === 0){
+      ok = false;
+      alert('يرجى ترشيح شخص واحد على الأقل.');
+    }
+
+    // consent required
+    const consent = document.getElementById('consent');
+    const consentBad = !consent.checked;
+    document.getElementById('consentBox').classList.toggle('invalid', consentBad);
+    document.getElementById('consentErr').style.display = consentBad ? 'block' : 'none';
+    if(consentBad) ok = false;
+
+    if(!ok){
+      const firstBad = document.querySelector('.invalid');
+      if(firstBad) firstBad.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+
+    // build payload
+    const data = {
+      timestamp: new Date().toISOString(),
+      refName: name.value.trim(),
+      refPhone: normDigits(phone.value),
+      consent: consent.checked ? "نعم" : "لا"
+    };
+    for(let i=1;i<=5;i++){
+      data[`n${i}_name`]  = form[`n${i}_name`].value.trim();
+      data[`n${i}_phone`] = normDigits(form[`n${i}_phone`].value);
+      data[`n${i}_area`]  = form[`n${i}_area`].value.trim();
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'جارٍ الإرسال...';
+
+    try{
+      if(SHEET_ENDPOINT && !SHEET_ENDPOINT.includes('PASTE_')){
+        await fetch(SHEET_ENDPOINT, {
+          method:'POST',
+          mode:'no-cors',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify(data)
+        });
+      } else {
+        console.log('Demo mode (no endpoint set):', data);
+        await new Promise(r=>setTimeout(r,600));
+      }
+      form.style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+      window.scrollTo({top:0, behavior:'smooth'});
+    }catch(err){
+      btn.disabled = false;
+      btn.textContent = 'إرسال الترشيحات';
+      alert('تعذّر الإرسال، يرجى المحاولة مرة أخرى.');
+    }
+  });
+
+  // live phone cleanup
+  document.querySelectorAll('input[type=tel]').forEach(inp=>{
+    inp.addEventListener('blur', ()=>{ if(inp.value.trim()) showErr(inp, !validPhone(inp.value)); });
+  });
+
+  // clear consent error once checked
+  document.getElementById('consent').addEventListener('change', function(){
+    if(this.checked){
+      document.getElementById('consentBox').classList.remove('invalid');
+      document.getElementById('consentErr').style.display = 'none';
+    }
+  });
+</script>
+</body>
+</html>
