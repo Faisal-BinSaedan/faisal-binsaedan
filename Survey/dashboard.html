@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0e3a5c" />
+  <title>لوحة نتائج تقييم زيارة عملاء فيلا عرض ملفي الحوية | FBS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    :root{
+      --brand:#0e3a5c;
+      --brand-dark:#092b45;
+      --brand-2:#5e92b8;
+      --brand-3:#a7d4f0;
+      --ink:#172b3a;
+      --muted:#6c7f8d;
+      --bg:#eef4f8;
+      --card:#ffffff;
+      --line:#d9e5ec;
+      --success:#1d8f66;
+      --warning:#c88b17;
+      --danger:#c84d4d;
+      --shadow:0 14px 38px rgba(14,58,92,.10);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:'Tajawal',sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+      min-height:100vh;
+    }
+
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+
+    .hero{
+      position:relative;
+      min-height:280px;
+      background:#0a2034 url('malfa-alhawya-1.jpg') center 48%/cover no-repeat;
+      overflow:hidden;
+      color:#fff;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(110deg,rgba(7,31,50,.94) 0%,rgba(14,58,92,.80) 45%,rgba(14,58,92,.35) 100%);
+    }
+    .hero-inner{
+      position:relative;
+      z-index:1;
+      max-width:1460px;
+      margin:0 auto;
+      padding:30px 30px 72px;
+    }
+    .brand-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+    }
+    .logo{
+      width:148px;
+      max-height:74px;
+      object-fit:contain;
+      filter:brightness(0) invert(1) drop-shadow(0 3px 8px rgba(0,0,0,.35));
+    }
+    .live-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 13px;
+      border:1px solid rgba(255,255,255,.35);
+      background:rgba(255,255,255,.12);
+      border-radius:999px;
+      font-size:13px;
+      backdrop-filter:blur(8px);
+    }
+    .live-dot{
+      width:9px;height:9px;border-radius:50%;background:#58e7a7;
+      box-shadow:0 0 0 5px rgba(88,231,167,.15);
+    }
+    .hero-copy{margin-top:38px;max-width:780px}
+    .eyebrow{font-size:14px;font-weight:700;opacity:.9;margin-bottom:9px}
+    .hero h1{font-size:clamp(28px,4vw,46px);line-height:1.25;margin:0 0 12px;font-weight:800}
+    .hero p{margin:0;max-width:720px;color:rgba(255,255,255,.88);font-size:16px;line-height:1.9}
+
+    .container{
+      max-width:1460px;
+      margin:-48px auto 0;
+      padding:0 30px 44px;
+      position:relative;
+      z-index:2;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid rgba(207,218,226,.75);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    .toolbar{
+      padding:18px;
+      display:grid;
+      grid-template-columns:minmax(160px,1fr) minmax(160px,1fr) minmax(190px,1fr) minmax(170px,1fr) minmax(190px,1fr) auto;
+      gap:12px;
+      align-items:end;
+    }
+    .field label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:0 4px 7px}
+    .field input,.field select{
+      width:100%;height:43px;border:1px solid var(--line);border-radius:11px;background:#fbfdfe;
+      padding:0 12px;color:var(--ink);outline:none;transition:.15s;
+    }
+    .field input:focus,.field select:focus{border-color:var(--brand-2);box-shadow:0 0 0 3px rgba(94,146,184,.12)}
+    .field.check-field{align-self:center;padding-top:20px}
+    .check-wrap{height:43px;display:flex;align-items:center;gap:8px;padding:0 4px;color:var(--ink);font-weight:600;font-size:14px}
+    .check-wrap input{width:18px;height:18px;accent-color:var(--brand)}
+    .toolbar-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start}
+    .btn{
+      border:none;border-radius:11px;height:43px;padding:0 15px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;
+    }
+    .btn-primary{background:var(--brand);color:#fff}
+    .btn-primary:hover{background:var(--brand-dark)}
+    .btn-soft{background:#e8f1f6;color:var(--brand)}
+    .btn-soft:hover{background:#dceaf2}
+
+    .connection-row{
+      margin-top:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      padding:0 4px;
+      color:var(--muted);
+      font-size:13px;
+      min-height:24px;
+    }
+    .connection-status{display:flex;align-items:center;gap:8px}
+    .status-dot{width:8px;height:8px;border-radius:50%;background:#a7b7c2}
+    .status-dot.loading{background:var(--warning);animation:pulse 1.2s infinite}
+    .status-dot.ok{background:var(--success)}
+    .status-dot.error{background:var(--danger)}
+    @keyframes pulse{50%{opacity:.35}}
+
+    .kpi-grid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:14px;
+    }
+    .kpi{padding:20px 18px;min-height:132px;position:relative;overflow:hidden}
+    .kpi::after{content:"";position:absolute;width:92px;height:92px;border-radius:50%;background:rgba(94,146,184,.08);left:-28px;bottom:-34px}
+    .kpi-label{font-size:13px;color:var(--muted);font-weight:700;min-height:36px}
+    .kpi-value{margin-top:5px;font-size:31px;font-weight:800;color:var(--brand);letter-spacing:-.5px}
+    .kpi-note{margin-top:2px;font-size:12px;color:#82939e}
+    .kpi.alert .kpi-value{color:var(--danger)}
+
+    .insight-strip{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr;
+      gap:14px;
+    }
+    .insight{padding:17px 18px;display:flex;align-items:center;gap:14px;min-height:86px}
+    .insight-icon{width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:#eaf3f8;color:var(--brand);font-size:21px;flex:0 0 auto}
+    .insight-title{font-size:12px;color:var(--muted);font-weight:700}
+    .insight-value{font-size:16px;font-weight:800;margin-top:4px;color:var(--ink)}
+    .insight-danger .insight-icon{background:#fff0f0;color:var(--danger)}
+
+    .grid-2{margin-top:14px;display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+    .grid-2.equal{grid-template-columns:1fr 1fr}
+    .chart-card{padding:20px;min-height:390px}
+    .chart-card.small{min-height:360px}
+    .card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}
+    .card-title{font-size:18px;font-weight:800;color:var(--brand);margin:0}
+    .card-sub{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.7}
+    .pill{font-size:12px;font-weight:700;color:var(--brand);background:#edf5f9;padding:6px 10px;border-radius:999px;white-space:nowrap}
+    .chart-wrap{position:relative;height:300px}
+    .chart-wrap.tall{height:330px}
+
+    .issues-card{padding:20px}
+    .issues-list{display:grid;gap:10px}
+    .issue-row{border:1px solid var(--line);border-radius:13px;padding:13px 14px;background:#fbfdfe}
+    .issue-top{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:13px}
+    .issue-name{font-weight:700;color:var(--ink)}
+    .issue-count{font-weight:800;color:var(--danger);white-space:nowrap}
+    .progress{height:7px;background:#edf1f4;border-radius:999px;overflow:hidden;margin-top:9px}
+    .progress > span{display:block;height:100%;background:linear-gradient(90deg,#d86a6a,#f3b26d);border-radius:999px}
+    .issue-meta{margin-top:6px;color:var(--muted);font-size:11px}
+
+    .comments-card{padding:20px}
+    .comments-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .comment{border:1px solid var(--line);border-radius:14px;padding:15px;background:#fbfdfe;min-height:116px}
+    .comment-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}
+    .comment-name{font-size:12px;font-weight:800;color:var(--brand)}
+    .comment-date{font-size:11px;color:#8a9aa5;direction:ltr}
+    .comment-text{font-size:14px;line-height:1.9;color:#314756;white-space:pre-wrap}
+    .empty{padding:30px;text-align:center;border:1px dashed var(--line);border-radius:14px;color:var(--muted);grid-column:1/-1}
+
+    .table-card{padding:0;overflow:hidden}
+    .table-head{padding:20px 20px 13px;display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+    .table-wrap{overflow:auto;max-height:590px;border-top:1px solid var(--line)}
+    table{width:100%;border-collapse:separate;border-spacing:0;min-width:1040px;font-size:13px}
+    thead th{position:sticky;top:0;z-index:2;background:#f4f8fb;color:var(--brand);font-weight:800;text-align:center;padding:12px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+    tbody td{padding:11px 10px;border-bottom:1px solid #edf2f5;text-align:center;color:#314756;background:#fff}
+    tbody tr:hover td{background:#fbfdfe}
+    td.comment-cell{text-align:right;max-width:330px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .score-chip{display:inline-flex;align-items:center;justify-content:center;min-width:48px;padding:4px 7px;border-radius:999px;font-weight:800;background:#edf5f9;color:var(--brand)}
+    .score-chip.low{background:#fff0f0;color:var(--danger)}
+    .yes{color:var(--success);font-weight:800}.no{color:var(--danger);font-weight:800}
+
+    .footer{padding:26px 0 0;text-align:center;color:#81939f;font-size:12px}
+
+    .loading-overlay{
+      position:fixed;inset:0;background:rgba(238,244,248,.82);backdrop-filter:blur(5px);z-index:20;
+      display:flex;align-items:center;justify-content:center;transition:.2s;
+    }
+    .loading-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
+    .loader-card{background:#fff;border-radius:18px;box-shadow:var(--shadow);padding:24px 28px;text-align:center;min-width:250px}
+    .spinner{width:34px;height:34px;border:4px solid #dbe7ee;border-top-color:var(--brand);border-radius:50%;margin:0 auto 12px;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .toast{position:fixed;left:20px;bottom:20px;z-index:30;max-width:420px;padding:14px 16px;background:#173549;color:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.2);display:none;font-size:13px;line-height:1.7}
+    .toast.show{display:block}
+
+    @media (max-width:1200px){
+      .toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .insight-strip{grid-template-columns:1fr 1fr}
+      .insight-strip .insight:first-child{grid-column:1/-1}
+    }
+    @media (max-width:900px){
+      .hero-inner{padding:24px 18px 62px}.container{padding:0 16px 34px}
+      .grid-2,.grid-2.equal{grid-template-columns:1fr}
+      .comments-list{grid-template-columns:1fr}
+      .chart-card{min-height:365px}
+    }
+    @media (max-width:680px){
+      .hero{min-height:245px}.logo{width:118px}.hero-copy{margin-top:29px}.hero p{font-size:14px}
+      .toolbar{grid-template-columns:1fr 1fr;padding:14px}.field.check-field{padding-top:0}.toolbar-actions{grid-column:1/-1}
+      .kpi-grid{grid-template-columns:1fr 1fr;gap:10px}.kpi{min-height:118px;padding:16px 14px}.kpi-value{font-size:27px}
+      .insight-strip{grid-template-columns:1fr}.insight-strip .insight:first-child{grid-column:auto}
+      .chart-card,.issues-card,.comments-card{padding:15px}.chart-wrap{height:285px}.chart-wrap.tall{height:315px}
+      .connection-row{align-items:flex-start;flex-direction:column}
+    }
+    @media print{
+      body{background:#fff}.hero{min-height:190px}.hero-inner{padding-bottom:35px}.container{margin:-20px auto 0}
+      .toolbar,.toolbar-actions,.connection-row,.btn,.loading-overlay,.toast{display:none!important}
+      .card{box-shadow:none;break-inside:avoid}.chart-card{min-height:330px}.table-wrap{max-height:none;overflow:visible}
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader-card"><div class="spinner"></div><strong>جارٍ تحميل نتائج التقييم...</strong></div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="brand-row">
+        <img src="fbs-logo.png" alt="FBS فيصل بن سعيدان" class="logo">
+        <div class="live-badge"><span class="live-dot"></span> لوحة نتائج مباشرة</div>
+      </div>
+      <div class="hero-copy">
+        <div class="eyebrow">فيصل بن سعيدان للاستثمار والتطوير العقاري</div>
+        <h1>لوحة نتائج تقييم زيارة عملاء فيلا عرض ملفي الحوية</h1>
+        <p>متابعة مباشرة لآراء العملاء، مؤشرات الرضا، نقاط التحسين، وتوزيع التقييمات لقياس جودة تجربة الزيارة.</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card toolbar" aria-label="مرشحات لوحة التحكم">
+      <div class="field"><label for="dateFrom">من تاريخ</label><input type="date" id="dateFrom"></div>
+      <div class="field"><label for="dateTo">إلى تاريخ</label><input type="date" id="dateTo"></div>
+      <div class="field">
+        <label for="scoreFilter">نوع التقييم</label>
+        <select id="scoreFilter">
+          <option value="all">كل التقييمات</option>
+          <option value="low">يحتوي على تقييم 3 أو أقل</option>
+          <option value="positive">متوسط 4 فأعلى</option>
+          <option value="perfect">5 نجوم في جميع الأسئلة</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="q6Filter">الإجابة على الاستفسارات</label>
+        <select id="q6Filter">
+          <option value="all">الكل</option>
+          <option value="yes">نعم</option>
+          <option value="no">لا</option>
+        </select>
+      </div>
+      <div class="field check-field">
+        <label class="check-wrap"><input type="checkbox" id="commentsOnly"> عرض الردود التي تحتوي على اقتراحات فقط</label>
+      </div>
+      <div class="toolbar-actions">
+        <button class="btn btn-primary" id="refreshBtn" type="button">↻ تحديث</button>
+        <button class="btn btn-soft" id="resetBtn" type="button">إعادة الضبط</button>
+        <button class="btn btn-soft" id="exportBtn" type="button">تصدير CSV</button>
+        <button class="btn btn-soft" id="printBtn" type="button">طباعة / PDF</button>
+      </div>
+    </section>
+
+    <div class="connection-row">
+      <div class="connection-status"><span class="status-dot" id="statusDot"></span><span id="statusText">في انتظار الاتصال...</span></div>
+      <div id="lastUpdated"></div>
+    </div>
+
+    <section class="kpi-grid" aria-label="مؤشرات الأداء الرئيسية">
+      <article class="card kpi"><div class="kpi-label">إجمالي الردود</div><div class="kpi-value" id="kpiResponses">—</div><div class="kpi-note">حسب المرشحات الحالية</div></article>
+      <article class="card kpi"><div class="kpi-label">متوسط التقييم العام</div><div class="kpi-value" id="kpiAverage">—</div><div class="kpi-note">من 5 نجوم</div></article>
+      <article class="card kpi"><div class="kpi-label">مؤشر الرضا</div><div class="kpi-value" id="kpiSatisfaction">—</div><div class="kpi-note">متوسط التقييم ÷ 5</div></article>
+      <article class="card kpi"><div class="kpi-label">نسبة تقييمات 5 نجوم</div><div class="kpi-value" id="kpiFiveStar">—</div><div class="kpi-note">عبر الأسئلة الخمسة</div></article>
+      <article class="card kpi"><div class="kpi-label">تمت الإجابة على جميع الاستفسارات</div><div class="kpi-value" id="kpiYes">—</div><div class="kpi-note">نسبة إجابات نعم</div></article>
+      <article class="card kpi"><div class="kpi-label">الاستفسارات والاقتراحات</div><div class="kpi-value" id="kpiComments">—</div><div class="kpi-note">عدد الردود التي تحتوي على نص</div></article>
+    </section>
+
+    <section class="insight-strip">
+      <article class="card insight">
+        <div class="insight-icon">★</div>
+        <div><div class="insight-title">أقل بند في متوسط التقييم</div><div class="insight-value" id="lowestQuestion">—</div></div>
+      </article>
+      <article class="card insight insight-danger">
+        <div class="insight-icon">!</div>
+        <div><div class="insight-title">ردود تحتاج متابعة</div><div class="insight-value" id="lowResponses">—</div></div>
+      </article>
+      <article class="card insight">
+        <div class="insight-icon">↗</div>
+        <div><div class="insight-title">متوسط آخر 7 أيام متاحة</div><div class="insight-value" id="recentAverage">—</div></div>
+      </article>
+    </section>
+
+    <section class="grid-2">
+      <article class="card chart-card">
+        <div class="card-head"><div><h2 class="card-title">متوسط التقييم حسب السؤال</h2><div class="card-sub">مقارنة مباشرة بين محاور تجربة زيارة فيلا العرض.</div></div><span class="pill">1–5 نجوم</span></div>
+        <div class="chart-wrap tall"><canvas id="averageChart"></canvas></div>
+      </article>
+      <article class="card chart-card small">
+        <div class="card-head"><div><h2 class="card-title">الإجابة على الاستفسارات</h2><div class="card-sub">هل تمت الإجابة على كل الاستفسارات المتعلقة بالمشروع؟</div></div><span class="pill">نعم / لا</span></div>
+        <div class="chart-wrap"><canvas id="yesNoChart"></canvas></div>
+      </article>
+    </section>
+
+    <section class="grid-2 equal">
+      <article class="card chart-card">
+        <div class="card-head"><div><h2 class="card-title">توزيع التقييمات</h2><div class="card-sub">نسبة 1 إلى 5 نجوم لكل سؤال، محسوبة من الردود المعروضة.</div></div><span class="pill">% من الردود</span></div>
+        <div class="chart-wrap tall"><canvas id="distributionChart"></canvas></div>
+      </article>
+      <article class="card chart-card">
+        <div class="card-head"><div><h2 class="card-title">اتجاه عدد الردود</h2><div class="card-sub">عدد التقييمات المستلمة يومياً بتوقيت المملكة العربية السعودية.</div></div><span class="pill">Asia/Riyadh</span></div>
+        <div class="chart-wrap tall"><canvas id="trendChart"></canvas></div>
+      </article>
+    </section>
+
+    <section class="grid-2 equal">
+      <article class="card issues-card">
+        <div class="card-head"><div><h2 class="card-title">مؤشرات تحتاج الانتباه</h2><div class="card-sub">يتم اعتبار التقييم 3 نجوم أو أقل مؤشراً يحتاج للمراجعة.</div></div><span class="pill" id="lowScorePill">—</span></div>
+        <div class="issues-list" id="issuesList"></div>
+      </article>
+      <article class="card comments-card">
+        <div class="card-head"><div><h2 class="card-title">أحدث الاستفسارات والاقتراحات</h2><div class="card-sub">تظهر التعليقات إذا كانت مفعلة في واجهة البيانات.</div></div><span class="pill" id="commentsPill">—</span></div>
+        <div class="comments-list" id="commentsList"></div>
+      </article>
+    </section>
+
+    <section class="card table-card" style="margin-top:14px">
+      <div class="table-head">
+        <div><h2 class="card-title">تفاصيل الردود</h2><div class="card-sub">بيانات التقييم فقط. رقم الجوال لا يتم عرضه في لوحة التحكم.</div></div>
+        <span class="pill" id="tableCount">—</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr id="tableHeader"></tr></thead>
+          <tbody id="responsesBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="footer">© فيصل بن سعيدان للاستثمار والتطوير العقاري — FBS Customer Experience Dashboard</div>
+  </main>
+
+<script>
+(() => {
+  'use strict';
+
+  // Same Google Apps Script deployment used by the survey.
+  // After adding DashboardApi.gs and redeploying the Apps Script web app,
+  // this page will read live results from the same Google Sheet.
+  const DATA_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz6hbunHHJin5iYNeMuVS1SgYE9nouDM2caszipXlUWbvAomwjsf23cDdlbDHRSSTFGzw/exec';
+  const RIYADH_TZ = 'Asia/Riyadh';
+
+  const QUESTIONS = [
+    {key:'q1', short:'التنظيم وإدارة الزيارة', full:'التنظيم و إدارة الزيارة'},
+    {key:'q2', short:'فيلا العرض ومرفقاتها', full:'فيلا العرض و مرفقاتها'},
+    {key:'q3', short:'فريق المبيعات والتصاميم', full:'تجاوب فريق المبيعات و وضوح التصاميم و المساحات بفيلا العرض'},
+    {key:'q4', short:'سرعة توقيع العقد', full:'سرعة توقيع العقد مع المطور'},
+    {key:'q5', short:'الإجراءات مع البنك', full:'تسهيل الإجراءات مع البنك الممول'}
+  ];
+
+  let allResponses = [];
+  let filteredResponses = [];
+  let charts = {};
+  let backendMeta = {};
+
+  const $ = id => document.getElementById(id);
+  const els = {
+    dateFrom:$('dateFrom'), dateTo:$('dateTo'), scoreFilter:$('scoreFilter'), q6Filter:$('q6Filter'), commentsOnly:$('commentsOnly'),
+    refreshBtn:$('refreshBtn'), resetBtn:$('resetBtn'), exportBtn:$('exportBtn'), printBtn:$('printBtn'),
+    statusDot:$('statusDot'), statusText:$('statusText'), lastUpdated:$('lastUpdated'), loadingOverlay:$('loadingOverlay'), toast:$('toast')
+  };
+
+  function toast(message){
+    els.toast.textContent = message;
+    els.toast.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => els.toast.classList.remove('show'), 4200);
+  }
+
+  function setStatus(type, text){
+    els.statusDot.className = 'status-dot' + (type ? ' ' + type : '');
+    els.statusText.textContent = text;
+  }
+
+  function showLoading(on){ els.loadingOverlay.classList.toggle('hidden', !on); }
+
+  function normalizeYesNo(value){
+    const s = String(value == null ? '' : value).trim().toLowerCase();
+    if(['نعم','yes','y','true','1'].includes(s)) return 'yes';
+    if(['لا','no','n','false','0'].includes(s)) return 'no';
+    return '';
+  }
+
+  function asNumber(value){
+    const n = Number(value);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function parseTimestamp(value){
+    if(!value) return null;
+    if(value instanceof Date) return isNaN(value) ? null : value;
+    const s = String(value).trim();
+    let d;
+    if(/[zZ]$|[+-]\d{2}:?\d{2}$/.test(s)) d = new Date(s);
+    else if(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(s)) d = new Date(s.replace(' ','T') + '+03:00');
+    else d = new Date(s);
+    return isNaN(d) ? null : d;
+  }
+
+  function dateKeyRiyadh(date){
+    if(!date) return '';
+    return new Intl.DateTimeFormat('en-CA', {timeZone:RIYADH_TZ,year:'numeric',month:'2-digit',day:'2-digit'}).format(date);
+  }
+
+  function formatDateTime(date){
+    if(!date) return '—';
+    return new Intl.DateTimeFormat('ar-SA', {timeZone:RIYADH_TZ,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).format(date);
+  }
+
+  function formatPercent(v){ return Number.isFinite(v) ? v.toFixed(1) + '%' : '—'; }
+  function formatAvg(v){ return Number.isFinite(v) ? v.toFixed(2) : '—'; }
+
+  function responseAverage(r){
+    const vals = QUESTIONS.map(q => asNumber(r[q.key])).filter(v => v !== null);
+    return vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
+  }
+
+  function hasLowScore(r){ return QUESTIONS.some(q => { const v=asNumber(r[q.key]); return v !== null && v <= 3; }); }
+  function hasComment(r){ return !!String(r.suggestions || '').trim(); }
+
+  function jsonp(url, timeoutMs=15000){
+    return new Promise((resolve,reject)=>{
+      const callback = '__fbsDashboard_' + Date.now() + '_' + Math.floor(Math.random()*100000);
+      const script = document.createElement('script');
+      const separator = url.includes('?') ? '&' : '?';
+      const timer = setTimeout(()=>cleanup(new Error('انتهت مهلة الاتصال بواجهة البيانات.')), timeoutMs);
+      function cleanup(err, data){
+        clearTimeout(timer);
+        try{ delete window[callback]; }catch(_){ window[callback] = undefined; }
+        script.remove();
+        err ? reject(err) : resolve(data);
+      }
+      window[callback] = data => cleanup(null, data);
+      script.onerror = () => cleanup(new Error('تعذر الاتصال بواجهة البيانات.'));
+      script.src = url + separator + 'action=dashboard&callback=' + encodeURIComponent(callback) + '&_=' + Date.now();
+      document.head.appendChild(script);
+    });
+  }
+
+  async function loadData(){
+    showLoading(true);
+    setStatus('loading','جارٍ الاتصال ببيانات Google Sheet...');
+    try{
+      const payload = await jsonp(DATA_ENDPOINT);
+      if(!payload || payload.ok !== true || !Array.isArray(payload.responses)){
+        throw new Error(payload && payload.error ? payload.error : 'صيغة بيانات غير متوقعة من Apps Script.');
+      }
+      backendMeta = payload;
+      allResponses = payload.responses.map((r,i)=>({
+        ...r,
+        _id:i+1,
+        _date:parseTimestamp(r.timestamp)
+      }));
+      setDefaultDateRange();
+      applyFilters();
+      setStatus('ok','متصل مباشرة ببيانات Google Sheet');
+      const gen = parseTimestamp(payload.generatedAt);
+      els.lastUpdated.textContent = gen ? 'آخر تحديث: ' + formatDateTime(gen) : '';
+    }catch(err){
+      console.error(err);
+      allResponses = [];
+      applyFilters();
+      setStatus('error','تعذر تحميل النتائج — تحقق من نشر DashboardApi.gs وإعادة نشر Apps Script');
+      toast(err.message || 'تعذر تحميل النتائج.');
+    }finally{
+      showLoading(false);
+    }
+  }
+
+  function setDefaultDateRange(){
+    const dates = allResponses.map(r=>r._date).filter(Boolean).sort((a,b)=>a-b);
+    if(!dates.length) return;
+    if(!els.dateFrom.value) els.dateFrom.value = dateKeyRiyadh(dates[0]);
+    if(!els.dateTo.value) els.dateTo.value = dateKeyRiyadh(dates[dates.length-1]);
+  }
+
+  function applyFilters(){
+    const from = els.dateFrom.value;
+    const to = els.dateTo.value;
+    const score = els.scoreFilter.value;
+    const q6 = els.q6Filter.value;
+    const commentsOnly = els.commentsOnly.checked;
+
+    filteredResponses = allResponses.filter(r=>{
+      const key = dateKeyRiyadh(r._date);
+      if(from && key && key < from) return false;
+      if(to && key && key > to) return false;
+      if(score === 'low' && !hasLowScore(r)) return false;
+      if(score === 'positive'){
+        const avg = responseAverage(r);
+        if(avg === null || avg < 4) return false;
+      }
+      if(score === 'perfect' && !QUESTIONS.every(q => asNumber(r[q.key]) === 5)) return false;
+      if(q6 !== 'all' && normalizeYesNo(r.q6) !== q6) return false;
+      if(commentsOnly && !hasComment(r)) return false;
+      return true;
+    });
+
+    renderAll();
+  }
+
+  function renderAll(){
+    renderKpis();
+    renderInsights();
+    renderAverageChart();
+    renderYesNoChart();
+    renderDistributionChart();
+    renderTrendChart();
+    renderIssues();
+    renderComments();
+    renderTable();
+  }
+
+  function getRatingValues(rows=filteredResponses){
+    const vals=[];
+    rows.forEach(r=>QUESTIONS.forEach(q=>{const v=asNumber(r[q.key]);if(v!==null) vals.push(v);}));
+    return vals;
+  }
+
+  function questionStats(rows=filteredResponses){
+    return QUESTIONS.map(q=>{
+      const vals = rows.map(r=>asNumber(r[q.key])).filter(v=>v!==null);
+      const avg = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
+      return { ...q, vals, avg, low: vals.filter(v=>v<=3).length };
+    });
+  }
+
+  function renderKpis(){
+    const vals = getRatingValues();
+    const avg = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
+    const yesNo = filteredResponses.map(r=>normalizeYesNo(r.q6)).filter(Boolean);
+    const yes = yesNo.filter(v=>v==='yes').length;
+    $('kpiResponses').textContent = filteredResponses.length.toLocaleString('ar-SA');
+    $('kpiAverage').textContent = avg === null ? '—' : formatAvg(avg) + ' / 5';
+    $('kpiSatisfaction').textContent = avg === null ? '—' : formatPercent((avg/5)*100);
+    $('kpiFiveStar').textContent = vals.length ? formatPercent(vals.filter(v=>v===5).length/vals.length*100) : '—';
+    $('kpiYes').textContent = yesNo.length ? formatPercent(yes/yesNo.length*100) : '—';
+    $('kpiComments').textContent = filteredResponses.filter(hasComment).length.toLocaleString('ar-SA');
+  }
+
+  function renderInsights(){
+    const stats = questionStats().filter(s=>s.avg!==null).sort((a,b)=>a.avg-b.avg);
+    $('lowestQuestion').textContent = stats.length ? `${stats[0].short} — ${stats[0].avg.toFixed(2)} / 5` : '—';
+    const lowCount = filteredResponses.filter(hasLowScore).length;
+    $('lowResponses').textContent = filteredResponses.length ? `${lowCount.toLocaleString('ar-SA')} من ${filteredResponses.length.toLocaleString('ar-SA')}` : '—';
+
+    const dated = filteredResponses.filter(r=>r._date).sort((a,b)=>b._date-a._date);
+    if(!dated.length){ $('recentAverage').textContent='—'; return; }
+    const maxDate = dated[0]._date;
+    const cutoff = new Date(maxDate.getTime() - 6*24*60*60*1000);
+    const recent = dated.filter(r=>r._date >= cutoff);
+    const vals = getRatingValues(recent);
+    const avg = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
+    $('recentAverage').textContent = avg===null ? '—' : `${avg.toFixed(2)} / 5`;
+  }
+
+  function destroyChart(name){ if(charts[name]){ charts[name].destroy(); charts[name]=null; } }
+  function baseChartOptions(){
+    return {
+      responsive:true,
+      maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{labels:{font:{family:'Tajawal',size:12},usePointStyle:true,boxWidth:8}},
+        tooltip:{titleFont:{family:'Tajawal'},bodyFont:{family:'Tajawal'}}
+      }
+    };
+  }
+
+  function renderAverageChart(){
+    destroyChart('average');
+    const stats=questionStats();
+    const ctx=$('averageChart');
+    charts.average = new Chart(ctx,{
+      type:'bar',
+      data:{labels:stats.map(s=>s.short),datasets:[{label:'متوسط التقييم',data:stats.map(s=>s.avg===null?0:+s.avg.toFixed(3)),backgroundColor:['#0e3a5c','#5e92b8','#2c6b91','#7aaac9','#a7d4f0'],borderRadius:8,borderSkipped:false,barThickness:28}]},
+      options:{...baseChartOptions(),indexAxis:'y',plugins:{...baseChartOptions().plugins,legend:{display:false}},scales:{x:{min:0,max:5,ticks:{stepSize:1,font:{family:'Tajawal'}},grid:{color:'#edf2f5'}},y:{ticks:{font:{family:'Tajawal',size:12}},grid:{display:false}}}}
+    });
+  }
+
+  function renderYesNoChart(){
+    destroyChart('yesNo');
+    const values=filteredResponses.map(r=>normalizeYesNo(r.q6)).filter(Boolean);
+    const yes=values.filter(v=>v==='yes').length,no=values.filter(v=>v==='no').length;
+    charts.yesNo = new Chart($('yesNoChart'),{
+      type:'doughnut',
+      data:{labels:['نعم','لا'],datasets:[{data:[yes,no],backgroundColor:['#1d8f66','#c84d4d'],borderColor:'#ffffff',borderWidth:4,hoverOffset:4}]},
+      options:{...baseChartOptions(),cutout:'70%',plugins:{...baseChartOptions().plugins,legend:{position:'bottom',labels:{font:{family:'Tajawal'},usePointStyle:true}},tooltip:{callbacks:{label:(ctx)=>{const total=yes+no;const pct=total?ctx.raw/total*100:0;return ` ${ctx.label}: ${ctx.raw} (${pct.toFixed(1)}%)`;}}}}}
+    });
+  }
+
+  function renderDistributionChart(){
+    destroyChart('distribution');
+    const stats=questionStats();
+    const datasets=[1,2,3,4,5].map(star=>({
+      label:`${star} نجمة`,
+      data:stats.map(s=>s.vals.length ? +(s.vals.filter(v=>v===star).length/s.vals.length*100).toFixed(1) : 0),
+      backgroundColor:{1:'#c84d4d',2:'#e07a63',3:'#d9a441',4:'#7aaac9',5:'#0e3a5c'}[star],
+      borderWidth:0,
+      borderRadius:star===5?5:0
+    }));
+    charts.distribution = new Chart($('distributionChart'),{
+      type:'bar',
+      data:{labels:stats.map(s=>s.short),datasets},
+      options:{...baseChartOptions(),indexAxis:'y',scales:{x:{stacked:true,min:0,max:100,ticks:{callback:v=>v+'%',font:{family:'Tajawal'}},grid:{color:'#edf2f5'}},y:{stacked:true,ticks:{font:{family:'Tajawal',size:11}},grid:{display:false}}},plugins:{...baseChartOptions().plugins,legend:{position:'bottom',labels:{font:{family:'Tajawal'},usePointStyle:true}}}}
+    });
+  }
+
+  function renderTrendChart(){
+    destroyChart('trend');
+    const byDay={};
+    filteredResponses.forEach(r=>{const k=dateKeyRiyadh(r._date);if(k) byDay[k]=(byDay[k]||0)+1;});
+    const labels=Object.keys(byDay).sort();
+    charts.trend = new Chart($('trendChart'),{
+      type:'line',
+      data:{labels,datasets:[{label:'عدد الردود',data:labels.map(k=>byDay[k]),borderColor:'#0e3a5c',backgroundColor:'rgba(94,146,184,.18)',fill:true,tension:.28,pointRadius:3,pointHoverRadius:5,borderWidth:2.5}]},
+      options:{...baseChartOptions(),scales:{x:{ticks:{font:{family:'Tajawal'},maxRotation:45,minRotation:0,autoSkip:true,maxTicksLimit:10},grid:{display:false}},y:{beginAtZero:true,ticks:{precision:0,font:{family:'Tajawal'}},grid:{color:'#edf2f5'}}},plugins:{...baseChartOptions().plugins,legend:{display:false}}}
+    });
+  }
+
+  function renderIssues(){
+    const list=$('issuesList');
+    list.innerHTML='';
+    const stats=questionStats();
+    const maxLow=Math.max(1,...stats.map(s=>s.low));
+    stats.sort((a,b)=>b.low-a.low || (a.avg??9)-(b.avg??9));
+    const totalLow=stats.reduce((a,s)=>a+s.low,0);
+    $('lowScorePill').textContent = `${totalLow.toLocaleString('ar-SA')} تقييم ≤ 3`;
+    if(!filteredResponses.length){ list.innerHTML='<div class="empty">لا توجد بيانات ضمن المرشحات الحالية.</div>'; return; }
+    stats.forEach(s=>{
+      const div=document.createElement('div');
+      div.className='issue-row';
+      const pct=s.vals.length ? s.low/s.vals.length*100 : 0;
+      div.innerHTML=`<div class="issue-top"><span class="issue-name">${escapeHtml(s.full)}</span><span class="issue-count">${s.low.toLocaleString('ar-SA')} رد</span></div><div class="progress"><span style="width:${Math.min(100,s.low/maxLow*100)}%"></span></div><div class="issue-meta">${pct.toFixed(1)}% من إجابات السؤال — متوسط ${s.avg===null?'—':s.avg.toFixed(2)} / 5</div>`;
+      list.appendChild(div);
+    });
+  }
+
+  function renderComments(){
+    const list=$('commentsList');
+    list.innerHTML='';
+    const comments=filteredResponses.filter(hasComment).sort((a,b)=>(b._date||0)-(a._date||0));
+    $('commentsPill').textContent = `${comments.length.toLocaleString('ar-SA')} تعليق`;
+    if(!comments.length){
+      const msg = backendMeta && backendMeta.commentsIncluded === false ? 'عرض التعليقات معطّل في إعدادات DashboardApi.gs لحماية الخصوصية.' : 'لا توجد استفسارات أو اقتراحات ضمن المرشحات الحالية.';
+      list.innerHTML=`<div class="empty">${msg}</div>`;
+      return;
+    }
+    comments.slice(0,8).forEach(r=>{
+      const div=document.createElement('article');
+      div.className='comment';
+      const who = r.custName ? escapeHtml(r.custName) : 'ملاحظات عميل';
+      div.innerHTML=`<div class="comment-top"><span class="comment-name">${who}</span><span class="comment-date">${escapeHtml(formatDateTime(r._date))}</span></div><div class="comment-text">${escapeHtml(String(r.suggestions||''))}</div>`;
+      list.appendChild(div);
+    });
+  }
+
+  function renderTable(){
+    const hasNames=filteredResponses.some(r=>String(r.custName||'').trim());
+    const header=$('tableHeader');
+    header.innerHTML='';
+    const columns=[];
+    if(hasNames) columns.push({label:'العميل',key:'custName'});
+    columns.push({label:'التاريخ',key:'timestamp'});
+    QUESTIONS.forEach((q,i)=>columns.push({label:`س${i+1}`,key:q.key,title:q.full}));
+    columns.push({label:'الإجابة على الاستفسارات',key:'q6'});
+    columns.push({label:'المتوسط',key:'avg'});
+    columns.push({label:'الاستفسارات والاقتراحات',key:'suggestions'});
+    columns.forEach(c=>{const th=document.createElement('th');th.textContent=c.label;if(c.title)th.title=c.title;header.appendChild(th);});
+
+    const body=$('responsesBody');body.innerHTML='';
+    const rows=[...filteredResponses].sort((a,b)=>(b._date||0)-(a._date||0));
+    $('tableCount').textContent=`${rows.length.toLocaleString('ar-SA')} رد`;
+    if(!rows.length){ const tr=document.createElement('tr');tr.innerHTML=`<td colspan="${columns.length}">لا توجد بيانات ضمن المرشحات الحالية.</td>`;body.appendChild(tr);return; }
+    rows.slice(0,500).forEach(r=>{
+      const tr=document.createElement('tr');
+      columns.forEach(c=>{
+        const td=document.createElement('td');
+        if(c.key==='timestamp') td.textContent=formatDateTime(r._date);
+        else if(/^q[1-5]$/.test(c.key)){ const v=asNumber(r[c.key]);td.innerHTML=v===null?'—':`<span class="score-chip ${v<=3?'low':''}">${v} ★</span>`; }
+        else if(c.key==='q6'){ const yn=normalizeYesNo(r.q6);td.textContent=yn==='yes'?'نعم':yn==='no'?'لا':'—';td.className=yn==='yes'?'yes':yn==='no'?'no':''; }
+        else if(c.key==='avg'){ const avg=responseAverage(r);td.innerHTML=avg===null?'—':`<span class="score-chip ${avg<4?'low':''}">${avg.toFixed(2)}</span>`; }
+        else if(c.key==='suggestions'){ td.textContent=String(r.suggestions||'').trim()||'—';td.className='comment-cell';td.title=String(r.suggestions||''); }
+        else td.textContent=String(r[c.key]||'—');
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+  }
+
+  function escapeHtml(value){
+    return String(value == null ? '' : value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+  }
+
+  function resetFilters(){
+    els.dateFrom.value='';els.dateTo.value='';els.scoreFilter.value='all';els.q6Filter.value='all';els.commentsOnly.checked=false;
+    setDefaultDateRange();applyFilters();
+  }
+
+  function csvEscape(v){
+    const s=String(v==null?'':v).replace(/\r?\n/g,' ');
+    return '"'+s.replace(/"/g,'""')+'"';
+  }
+
+  function exportCsv(){
+    if(!filteredResponses.length){toast('لا توجد بيانات لتصديرها.');return;}
+    const includeName=filteredResponses.some(r=>String(r.custName||'').trim());
+    const headers=[...(includeName?['custName']:[]),'timestamp','q1','q2','q3','q4','q5','q6','average','suggestions'];
+    const lines=[headers.map(csvEscape).join(',')];
+    [...filteredResponses].sort((a,b)=>(b._date||0)-(a._date||0)).forEach(r=>{
+      const values=[...(includeName?[r.custName||'']:[]),r.timestamp||'',...QUESTIONS.map(q=>r[q.key]??''),r.q6||'',responseAverage(r)?.toFixed(2)||'',r.suggestions||''];
+      lines.push(values.map(csvEscape).join(','));
+    });
+    const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='FBS_Survey_Dashboard_Export_'+new Date().toISOString().slice(0,10)+'.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),500);
+  }
+
+  [els.dateFrom,els.dateTo,els.scoreFilter,els.q6Filter,els.commentsOnly].forEach(el=>el.addEventListener('change',applyFilters));
+  els.refreshBtn.addEventListener('click',loadData);
+  els.resetBtn.addEventListener('click',resetFilters);
+  els.exportBtn.addEventListener('click',exportCsv);
+  els.printBtn.addEventListener('click',()=>window.print());
+
+  loadData();
+})();
+</script>
+</body>
+</html>
